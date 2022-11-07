@@ -11,22 +11,18 @@ opt.parse(ARGV)
 #今日の日付
 today = Date.today
 
-#今日の日付から月と年
-month = today.month
-year = today.year
-
-
 v = parmas[:m]
 x = parmas[:y]
-if v != nil && x != nil  #もし年月の指定があったら
-  month = parmas[:m]
+if x != nil  #もし年が指定があればその値を、なければ今日の年を返す
   year = parmas[:y]
-elsif v != nil           #もし月の指定があったら
+else
+  year = today.year
+end
+
+if v != nil           #もし月の指定があればその値を、なければ今日の月を返す
   month = parmas[:m]
-  year = today.year
-else                     #指定がなければ
+else
   month = today.month
-  year = today.year
 end
 
 title = "#{month}月 #{year}"
@@ -37,7 +33,6 @@ week = %w(日 月 火 水 木 金 土)
 puts week.join(" ")
 
 
-first_day = Date.new(year, month, 1).day   #月の最初の日を返す
 last_day = Date.new(year, month, -1).day   #月の最後の日を返す
 fwday = Date.new(year, month, 1).wday     #月の最初の曜日を返す
 space = ("   ") * fwday
@@ -45,8 +40,9 @@ print space
 
 #カレンダーを表示する
 
-(first_day..last_day).each do |date|
-dweek = Date.new(year, month, date).wday  #1から最後の日までの曜日を返す
+(1..last_day).each do |date|
+monthly_day = Date.new(year, month, date) 
+dweek = monthly_day.wday  #1から最後の日までの曜日を返す
 dday = date.to_s
 day = sprintf("%2s", dday) 
   if dweek == 6
