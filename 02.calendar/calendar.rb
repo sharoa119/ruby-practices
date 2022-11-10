@@ -14,7 +14,6 @@ today = Date.today
 year = parmas[:y] || today.year
 month = parmas[:m] || today.month
 
-
 title = "#{month}月 #{year}"
 puts title.center(20)
 
@@ -31,11 +30,8 @@ print space
 #カレンダーを表示する
 
 (first_day..last_day).each do |date|
-dday = date.day #日付をとる
-dweek = date.wday  #日付から曜日を返す
-
-day = sprintf("%2s", dday) 
-  if dweek == 6
+day = sprintf("%2s", date.day) 
+  if  date.saturday?
     print "#{day}\n"
   else
     print (day + " ")
