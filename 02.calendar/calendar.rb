@@ -1,4 +1,4 @@
-require "date"
+require 'date'
 require 'optparse'
 
 opt = OptionParser.new
@@ -23,15 +23,16 @@ puts week.join(" ")
 
 first_day = Date.new(year, month, 1)
 last_day = Date.new(year, month, -1)
-fwday = Date.new(year, month, 1).wday     #月の最初の曜日を返す
+
+#月の最初の曜日を返す
+fwday = Date.new(year, month, 1).wday
 space = ("   ") * fwday
 print space
 
 #カレンダーを表示する
-
 (first_day..last_day).each do |date|
-  day = sprintf("%2s", date.day) 
-  if  date.saturday?
+  day = sprintf("%2s", date.day)
+  if date.saturday?
     print "#{day}\n"
   else
     print (day + " ")
