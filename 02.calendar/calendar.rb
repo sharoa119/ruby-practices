@@ -30,7 +30,7 @@ print space
 #カレンダーを表示する
 
 (first_day..last_day).each do |date|
-day = sprintf("%2s", date.day) 
+  day = sprintf("%2s", date.day) 
   if  date.saturday?
     print "#{day}\n"
   else
