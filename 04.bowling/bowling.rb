@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
+PERFECT_SCORE = 10
 score = ARGV[0]
 all_scores = score.split(',')
 
 frames = Array.new(10) { [] }
 frame = 0
-PERFECT_SCORE = 10
 all_scores.each do |s|
   if frame == 9 # 0から始まるので10フレーム目は９になる。
     frames[frame] << (s == 'X' ? PERFECT_SCORE : s.to_i)
