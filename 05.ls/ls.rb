@@ -33,4 +33,3 @@ display_files.map.with_index(1) do |file, index|
     print file.to_s.ljust(max_name_len + 10)
   end
 end
-print("\n")
