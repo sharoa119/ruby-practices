@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
+require 'optparse'
+require 'etc'
+
+PARAMS = ARGV.getopts('a')
+
 COLUMN = 3
 
 def find_files
   path = Dir.pwd
   Dir.chdir(path)
-  Dir.glob('*')
+  if PARAMS['a']
+    Dir.entries('.').sort
+  else
+    Dir.glob('*')
+  end
 end
 
 max_name_len = find_files.map(&:length).max
@@ -27,4 +36,4 @@ display_files.map.with_index(1) do |file, index|
     print file.to_s.ljust(max_name_len + 10)
   end
 end
-print("\n")
+puts
