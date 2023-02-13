@@ -3,15 +3,15 @@
 require 'optparse'
 require 'etc'
 
-PARAMS = ARGV.getopts('a')
+PARAMS = ARGV.getopts('r')
 
 COLUMN = 3
 
 def find_files
   path = Dir.pwd
   Dir.chdir(path)
-  if PARAMS['a']
-    Dir.entries('.').sort
+  if PARAMS['r']
+    Dir.glob('*').reverse
   else
     Dir.glob('*')
   end
