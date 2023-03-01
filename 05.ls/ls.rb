@@ -7,6 +7,16 @@ params = ARGV.getopts('l')
 
 COLUMN = 3
 
+TYPE_SYMBOL = {
+  'fifo' => 'p',
+  'characterSpecial' => 'c',
+  'directory' => 'd',
+  'blockSpecial' => 'b',
+  'file' => '-',
+  'link' => 'l',
+  'socket' => 's'
+}.freeze
+
 MODE_SYMBOL = {
   '0' => '---',
   '1' => '--x',
@@ -37,11 +47,8 @@ def column_lineup(files)
   max_name_len = find_files.map(&:length).max
   display_files = display_column_files(files)
   display_files.map.with_index(1) do |file, index|
-    if (index % COLUMN).zero?
-      puts file.to_s.ljust(max_name_len + 10)
-    else
-      print file.to_s.ljust(max_name_len + 10)
-    end
+    print file.to_s.ljust(max_name_len + 10)
+    puts if (index % COLUMN).zero?
   end
 end
 
@@ -102,15 +109,7 @@ def get_max_size(long_formats)
 end
 
 def type_format(type)
-  {
-    'fifo' => 'p',
-    'characterSpecial' => 'c',
-    'directory' => 'd',
-    'blockSpecial' => 'b',
-    'file' => '-',
-    'link' => 'l',
-    'socket' => 's'
-  }[type]
+  TYPE_SYMBOL[type]
 end
 
 def mode_format(mode)
@@ -120,26 +119,14 @@ def mode_format(mode)
   special_authorization(octal_num, permissions_group).join
 end
 
-def special_authorization(octal_num, permissions_group) # rubocop:disable Metrics/MethodLength
+def special_authorization(octal_num, permissions_group)
   case octal_num.slice(2)
   when '1'
-    permissions_group[2] = if permissions_group[2].slice(2) == 'x'
-                             permissions_group[2].gsub(/.$/, 't')
-                           else
-                             permissions_group[2].gsub(/.$/, 'T')
-                           end
+    permissions_group[2] = permissions_group[2].gsub(/.$/, permissions_group[2].slice(2) == 'x' ? 't' : 'T')
   when '2'
-    permissions_group[1] = if permissions_group[1].slice(2) == 'x'
-                             permissions_group[1].gsub(/.$/, 's')
-                           else
-                             permissions_group[1].gsub(/.$/, 'S')
-                           end
+    permissions_group[1] = permissions_group[1].gsub(/.$/, permissions_group[1].slice(2) == 'x' ? 's' : 'S')
   when '4'
-    permissions_group[0] = if permissions_group[0].slice(2) == 'x'
-                             permissions_group[0].gsub(/.$/, 's')
-                           else
-                             permissions_group[0].gsub(/.$/, 'S')
-                           end
+    permissions_group[0] = permissions_group[0].gsub(/.$/, permissions_group[0].slice(2) == 'x' ? 's' : 'S')
   end
   permissions_group
 end
