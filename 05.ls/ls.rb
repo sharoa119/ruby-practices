@@ -3,7 +3,7 @@
 require 'optparse'
 require 'etc'
 
-params = ARGV.getopts('l')
+PARAMS = ARGV.getopts('alr')
 
 COLUMN = 3
 
@@ -28,9 +28,9 @@ MODE_SYMBOL = {
   '7' => 'rwx'
 }.freeze
 
-def files_to_show(params)
+def files_to_show
   files = find_files
-  if params['l']
+  if PARAMS['l']
     long_format_lineup(files)
   else
     column_lineup(files)
@@ -40,7 +40,13 @@ end
 def find_files
   path = Dir.pwd
   Dir.chdir(path)
-  Dir.glob('*')
+  files = if PARAMS['a']
+            Dir.entries('.').sort
+          else
+            Dir.glob('*')
+          end
+  files = files.reverse if PARAMS['r']
+  files
 end
 
 def column_lineup(files)
@@ -155,5 +161,5 @@ def filename(file)
   end
 end
 
-files_to_show(params)
+files_to_show
 puts
