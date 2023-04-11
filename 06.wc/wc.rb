@@ -3,15 +3,15 @@
 require 'optparse'
 
 def main
-  options = option_date
+  options = parse_command_line_options
   options = { l: true, w: true, c: true } if options.empty?
   paths = ARGV
   counts_date = display_date(paths)
-  counts_date.map { |count| display_word_count(count, options) }
+  counts_date.each { |count| word_counts(count, options) }
   display_total_count(counts_date, options) if paths.length >= 2
 end
 
-def option_date
+def parse_command_line_options
   opt = OptionParser.new
   options = {}
 
@@ -43,22 +43,22 @@ def count_file_stats(files, path = ' ')
   }
 end
 
-def display_word_count(count, options)
+def word_counts(count, options)
   word_count_format = []
-  word_count_format << count_format(count[:lines]) if options[:l]
-  word_count_format << count_format(count[:words]) if options[:w]
-  word_count_format << count_format(count[:bytes]) if options[:c]
+  word_count_format << format_count(count[:lines]) if options[:l]
+  word_count_format << format_count(count[:words]) if options[:w]
+  word_count_format << format_count(count[:bytes]) if options[:c]
   word_count_format << " #{count[:name]}" unless count[:name].empty?
   puts word_count_format.join
 end
 
-def count_format(count)
+def format_count(count)
   count.to_s.rjust(8)
 end
 
 def display_total_count(counts_date, options)
   total_counts = create_total_count(counts_date)
-  display_word_count(total_counts, options)
+  word_counts(total_counts, options)
 end
 
 def create_total_count(counts_date)
