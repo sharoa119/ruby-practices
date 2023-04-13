@@ -6,9 +6,9 @@ def main
   options = parse_command_line_options
   options = { l: true, w: true, c: true } if options.empty?
   paths = ARGV
-  counts_date = display_date(paths)
-  counts_date.each { |count| word_counts(count, options) }
-  display_total_count(counts_date, options) if paths.length >= 2
+  counts_data = count_by_input_content(paths)
+  counts_data.each { |count| print_word_counts(count, options) }
+  display_total_count(counts_data, options) if paths.length >= 2
 end
 
 def parse_command_line_options
@@ -22,7 +22,7 @@ def parse_command_line_options
   options
 end
 
-def display_date(paths)
+def count_by_input_content(paths)
   if paths.empty?
     files = $stdin.read
     [count_file_stats(files)]
@@ -43,29 +43,29 @@ def count_file_stats(files, path = ' ')
   }
 end
 
-def word_counts(count, options)
-  word_count_format = []
-  word_count_format << format_count(count[:lines]) if options[:l]
-  word_count_format << format_count(count[:words]) if options[:w]
-  word_count_format << format_count(count[:bytes]) if options[:c]
-  word_count_format << " #{count[:name]}" unless count[:name].empty?
-  puts word_count_format.join
+def print_word_counts(count, options)
+  word_counts = []
+  word_counts << format_count(count[:lines]) if options[:l]
+  word_counts << format_count(count[:words]) if options[:w]
+  word_counts << format_count(count[:bytes]) if options[:c]
+  word_counts << " #{count[:name]}" unless count[:name].empty?
+  puts word_counts.join
 end
 
 def format_count(count)
   count.to_s.rjust(8)
 end
 
-def display_total_count(counts_date, options)
-  total_counts = create_total_count(counts_date)
-  word_counts(total_counts, options)
+def display_total_count(counts_data, options)
+  total_counts = create_total_count(counts_data)
+  print_word_counts(total_counts, options)
 end
 
-def create_total_count(counts_date)
+def create_total_count(counts_data)
   {
-    lines: counts_date.sum { |count| count[:lines] },
-    words: counts_date.sum { |count| count[:words] },
-    bytes: counts_date.sum { |count| count[:bytes] },
+    lines: counts_data.sum { |count| count[:lines] },
+    words: counts_data.sum { |count| count[:words] },
+    bytes: counts_data.sum { |count| count[:bytes] },
     name: 'total'
   }
 end
