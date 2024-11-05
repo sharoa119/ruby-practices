@@ -40,16 +40,16 @@ class Game
     return 0 if index == 9
 
     next_frame = @frames[index + 1]
-    bonus = next_frame.shots[0].pins
+    bonus = next_frame.shots[0].pin_count
 
     if next_frame.strike?
       if index == 8
-        bonus += next_frame.shots[1].pins
+        bonus += next_frame.shots[1].pin_count
       elsif index + 2 < @frames.size
-        bonus += @frames[index + 2].shots[0].pins
+        bonus += @frames[index + 2].shots[0].pin_count
       end
     elsif next_frame.shots.size > 1
-      bonus += next_frame.shots[1].pins
+      bonus += next_frame.shots[1].pin_count
     end
 
     bonus
@@ -58,6 +58,6 @@ class Game
   def bonus_for_spare(index)
     return 0 if index == 9
 
-    @frames[index + 1].shots[0].pins
+    @frames[index + 1].shots[0].pin_count
   end
 end

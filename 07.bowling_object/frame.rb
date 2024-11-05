@@ -14,14 +14,14 @@ class Frame
   end
 
   def strike?
-    @shots[0].pins == 10
+    @shots[0].pin_count == 10
   end
 
   def spare?
-    @shots.size == 2 && @shots.sum(&:pins) == 10
+    @shots.size == 2 && @shots.sum(&:pin_count) == 10
   end
 
   def score
-    @shots.sum(&:pins)
+    @shots.sum(&:pin_count)
   end
 end
