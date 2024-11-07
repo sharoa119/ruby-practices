@@ -21,6 +21,10 @@ class Frame
     @shots.size == 2 && @shots.sum(&:pin_count) == 10
   end
 
+  def complete?
+    strike? || @shots.size == 2
+  end
+
   def score
     @shots.sum(&:pin_count)
   end

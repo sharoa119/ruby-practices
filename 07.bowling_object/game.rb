@@ -14,11 +14,9 @@ class Game
     @frames.each_with_index do |frame, index|
       score += frame.score
       if frame.strike?
-        bonus = bonus_for_strike(index)
-        score += bonus
+        score += bonus_for_strike(index)
       elsif frame.spare?
-        bonus = bonus_for_spare(index)
-        score += bonus
+        score += bonus_for_spare(index)
       end
     end
     score
@@ -30,8 +28,7 @@ class Game
     frame_index = 0
     @score_data.each do |pin|
       @frames[frame_index].add_shot(pin)
-
-      frame_index += 1 if frame_index < 9 && (@frames[frame_index].strike? || @frames[frame_index].shots.size == 2)
+      frame_index += 1 if frame_index < 9 && @frames[frame_index].complete?
     end
   end
 
