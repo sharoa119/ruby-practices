@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DetailedFile
   TYPE_SYMBOL = {
     'fifo' => 'p',
@@ -28,59 +30,41 @@ class DetailedFile
     file_stat = File.stat(@file)
     {
       blocks: file_stat.blocks,
-      type: type_format(file_stat.ftype),
-      mode: mode_format(file_stat.mode),
+      type: TYPE_SYMBOL[file_stat.ftype],
+      mode: format_mode(file_stat.mode),
       nlink: file_stat.nlink.to_s,
       username: Etc.getpwuid(file_stat.uid).name,
       groupname: Etc.getgrgid(file_stat.gid).name,
-      bitesize: bitesize(file_stat),
-      mtime: mtime(file_stat),
-      pathname: filename
+      bitesize: file_stat.rdev != 0 ? "#{file_stat.rdev_major}, #{file_stat.rdev_minor}" : file_stat.size.to_s,
+      mtime: format_mtime(file_stat),
+      pathname: File.symlink?(@file) ? "#{@file} -> #{File.readlink(@file)}" : @file
     }
   end
 
   private
 
-  def type_format(type)
-    TYPE_SYMBOL[type]
-  end
+  def format_mode(mode)
+    octal = mode.to_s(8).rjust(6, '0') # ファイルの権限を8進数（3桁ではなく6桁）に変換し、文字列の先頭に不足分の0を追加し、6桁の文字列に整える。
+    # 8進数の最後の3桁を取得し、通常のユーザー、グループ、その他のユーザーの権限に対応し、chars で文字列を1文字ずつ分解し、それぞれの文字を MODE_SYMBOL ハッシュを使って「rwx」形式に変換
+    permissions = octal[-3..].chars.map { |n| MODE_SYMBOL[n] }
 
-  def mode_format(mode)
-    octal_num = mode.to_s(8).rjust(6, '0')
-    permissions_num = octal_num.slice(3..5).split(//)
-    permissions_group = permissions_num.map { |n| MODE_SYMBOL[n] }
-    special_authorization(octal_num, permissions_group).join
-  end
-
-  def special_authorization(octal_num, permissions_group)
-    case octal_num.slice(2)
+    case octal[2]
     when '1'
-      permissions_group[2] = permissions_group[2].gsub(/.$/, permissions_group[2].slice(2) == 'x' ? 't' : 'T')
+      permissions[2][-1] = permissions[2][-1] == 'x' ? 't' : 'T'
     when '2'
-      permissions_group[1] = permissions_group[1].gsub(/.$/, permissions_group[1].slice(2) == 'x' ? 's' : 'S')
+      permissions[1][-1] = permissions[1][-1] == 'x' ? 's' : 'S'
     when '4'
-      permissions_group[0] = permissions_group[0].gsub(/.$/, permissions_group[0].slice(2) == 'x' ? 's' : 'S')
+      permissions[0][-1] = permissions[0][-1] == 'x' ? 's' : 'S'
     end
-    permissions_group
+
+    permissions.join
   end
 
-  def bitesize(file_stat)
-    file_stat.rdev != 0 ? "#{file_stat.rdev_major}, #{file_stat.rdev_minor}" : file_stat.size.to_s
-  end
-
-  def mtime(file_stat)
+  def format_mtime(file_stat)
     if Time.now - file_stat.mtime >= (24 * 60 * 60 * (365 / 2.0)) || (Time.now - file_stat.mtime).negative?
       file_stat.mtime.strftime('%_m %_d %Y')
     else
       file_stat.mtime.strftime('%_m %_d %H:%M')
-    end
-  end
-
-  def filename
-    if File.symlink?(@file)
-      "#{@file} -> #{File.readlink(@file)}"
-    else
-      @file
     end
   end
 end
