@@ -7,8 +7,17 @@ require_relative 'path_display'
 require_relative 'file_detail_display'
 require_relative 'detailed_file'
 
-# コマンドライン引数を取得
-params = ARGV.getopts('alr')
+# optparseライブラリをrequire
+require 'optparse'
+
+params = {}
+OptionParser.new do |opts|
+  opts.on('-a') { params['a'] = true }
+  opts.on('-l') { params['l'] = true }
+  opts.on('-r') { params['r'] = true }
+
+  opts.parse!(ARGV)
+end
 
 # ファイルのリストを取得
 path_collection = PathCollection.new(dotmatch: params['a'], reverse: params['r'])
