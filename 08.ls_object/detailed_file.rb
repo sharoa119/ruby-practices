@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'etc'
+
 class DetailedFile
   TYPE_SYMBOL = {
     'fifo' => 'p',
