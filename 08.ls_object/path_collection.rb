@@ -3,7 +3,7 @@
 class PathCollection
   def initialize(dotmatch: false, reverse: false)
     @dotmatch = dotmatch
-    @reverse = reverse!
+    @reverse = reverse
   end
 
   def paths
