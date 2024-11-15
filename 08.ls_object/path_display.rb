@@ -19,7 +19,7 @@ class PathDisplay
   private
 
   def display_column_files
-    max_line = (@files.size / COLUMN.to_f).ceil
+    max_line = (@files.size / @column.to_f).ceil
     column_files = @files.each_slice(max_line).to_a
     column_files.transpose.flatten
   end
