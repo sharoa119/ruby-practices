@@ -46,8 +46,7 @@ class DetailedFile
   private
 
   def format_mode(mode)
-    octal = mode.to_s(8).rjust(6, '0') # ファイルの権限を8進数（3桁ではなく6桁）に変換し、文字列の先頭に不足分の0を追加し、6桁の文字列に整える。
-    # 8進数の最後の3桁を取得し、通常のユーザー、グループ、その他のユーザーの権限に対応し、chars で文字列を1文字ずつ分解し、それぞれの文字を MODE_SYMBOL ハッシュを使って「rwx」形式に変換
+    octal = mode.to_s(8).rjust(6, '0')
     permissions = octal[-3..].chars.map { |n| MODE_SYMBOL[n] }
 
     case octal[2]
