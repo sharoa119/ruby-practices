@@ -26,19 +26,19 @@ class DetailedFile
 
   def initialize(file)
     @file = file
+    @file_stat = File.stat(@file)
   end
 
   def attributes
-    file_stat = File.stat(@file)
     {
-      blocks: file_stat.blocks,
-      type: TYPE_SYMBOL[file_stat.ftype],
-      mode: format_mode(file_stat.mode),
-      nlink: file_stat.nlink.to_s,
-      username: Etc.getpwuid(file_stat.uid).name,
-      groupname: Etc.getgrgid(file_stat.gid).name,
-      bitesize: file_stat.rdev != 0 ? "#{file_stat.rdev_major}, #{file_stat.rdev_minor}" : file_stat.size.to_s,
-      mtime: format_mtime(file_stat),
+      blocks: @file_stat.blocks,
+      type: TYPE_SYMBOL[@file_stat.ftype],
+      mode: format_mode(@file_stat.mode),
+      nlink: @file_stat.nlink.to_s,
+      username: Etc.getpwuid(@file_stat.uid).name,
+      groupname: Etc.getgrgid(@file_stat.gid).name,
+      bitesize: @file_stat.rdev != 0 ? "#{@file_stat.rdev_major}, #{@file_stat.rdev_minor}" : @file_stat.size.to_s,
+      mtime: format_mtime(@file_stat),
       pathname: File.symlink?(@file) ? "#{@file} -> #{File.readlink(@file)}" : @file
     }
   end
@@ -49,6 +49,7 @@ class DetailedFile
     octal = mode.to_s(8).rjust(6, '0')
     permissions = octal[-3..].chars.map { |n| MODE_SYMBOL[n] }
 
+    # スティッキービットまたはSUID/SGIDの変更
     case octal[2]
     when '1'
       permissions[2][-1] = permissions[2][-1] == 'x' ? 't' : 'T'
