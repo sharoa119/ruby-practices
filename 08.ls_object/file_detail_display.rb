@@ -18,7 +18,7 @@ class FileDetailDisplay
         "#{format[:username].ljust(max_size[:username])}  ",
         "#{format[:groupname].ljust(max_size[:groupname])}  ",
         "#{format[:bitesize].rjust(max_size[:bitesize])} ",
-        "#{format[:mtime]} ",
+        "#{format[:mtime].rjust(max_size[:mtime])} ",
         format[:pathname]
       ]
       puts line.join
@@ -32,7 +32,8 @@ class FileDetailDisplay
       nlink: long_formats.map { |format| format[:nlink].size }.max,
       username: long_formats.map { |format| format[:username].size }.max,
       groupname: long_formats.map { |format| format[:groupname].size }.max,
-      bitesize: long_formats.map { |format| format[:bitesize].size }.max
+      bitesize: long_formats.map { |format| format[:bitesize].size }.max,
+      mtime: long_formats.map { |format| format[:mtime].size }.max
     }
   end
 end

@@ -62,10 +62,10 @@ class DetailedFile
   end
 
   def format_mtime(file_stat)
-    if Time.now - file_stat.mtime >= (24 * 60 * 60 * (365 / 2.0)) || (Time.now - file_stat.mtime).negative?
-      file_stat.mtime.strftime('%_m %_d %Y')
-    else
+    if Time.now.year == file_stat.mtime.year
       file_stat.mtime.strftime('%_m %_d %H:%M')
+    else
+      file_stat.mtime.strftime('%_m %_d  %Y')
     end
   end
 end
