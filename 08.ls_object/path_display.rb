@@ -24,17 +24,7 @@ class PathDisplay
   def rearrange_files(files)
     max_line = (files.size.to_f / @column).ceil
     column_files = files.each_slice(max_line).to_a
-
-    max_size = column_files.map(&:size).max
-    column_files.each { |col| col.fill(nil, col.size...max_size) }
-
-    rearranged = []
-    max_size.times do |i|
-      column_files.each do |col|
-        rearranged << (col[i] || '')
-      end
-    end
-
-    rearranged
+    column_files.each { |col| col.fill('', col.size...max_line) }
+    column_files.transpose.flatten
   end
 end
