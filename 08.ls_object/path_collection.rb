@@ -12,7 +12,7 @@ class PathCollection
             else
               Dir.glob('*')
             end
-    files.reverse! if @reverse
+    files.reverse if @reverse
     files
   end
 end
