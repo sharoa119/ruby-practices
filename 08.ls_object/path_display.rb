@@ -9,11 +9,32 @@ class PathDisplay
   end
 
   def show
-    max_name_length = @files.map(&:length).max
-    padded_files = @files.map { |file| file.ljust(max_name_length + COLUMN_PADDING) }
+    files_in_order = rearrange_files(@files)
 
-    padded_files.each_slice(@column) do |line|
-      puts line.join
+    max_name_length = files_in_order.map(&:length).max
+    files_in_order.each_with_index do |file, index|
+      print file.ljust(max_name_length + COLUMN_PADDING)
+      puts if ((index + 1) % @column).zero?
     end
+    puts if files_in_order.size % @column != 0
+  end
+
+  private
+
+  def rearrange_files(files)
+    max_line = (files.size.to_f / @column).ceil
+    column_files = files.each_slice(max_line).to_a
+
+    max_size = column_files.map(&:size).max
+    column_files.each { |col| col.fill(nil, col.size...max_size) }
+
+    rearranged = []
+    max_size.times do |i|
+      column_files.each do |col|
+        rearranged << (col[i] || '')
+      end
+    end
+
+    rearranged
   end
 end
