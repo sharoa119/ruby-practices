@@ -63,10 +63,11 @@ class DetailedFile
   end
 
   def format_mtime(file_stat)
-    if Time.now.year == file_stat.mtime.year
-      file_stat.mtime.strftime('%_m %_d %H:%M')
-    else
-      file_stat.mtime.strftime('%_m %_d  %Y')
-    end
+    format = if Time.now.year == file_stat.mtime.year
+               '%_m %_d %H:%M'
+             else
+               '%_m %_d  %Y'
+             end
+    file_stat.mtime.strftime(format)
   end
 end
