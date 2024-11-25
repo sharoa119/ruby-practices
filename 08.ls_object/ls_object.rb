@@ -20,10 +20,5 @@ end
 path_collection = PathCollection.new(dotmatch: params[:a], reverse: params[:r])
 paths = path_collection.paths
 
-if params[:l]
-  file_detail_display = FileDetailDisplay.new(paths)
-  file_detail_display.show
-else
-  path_display = PathDisplay.new(paths)
-  path_display.show
-end
+display = params[:l] ? FileDetailDisplay.new(paths) : PathDisplay.new(paths)
+display.show
