@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PathDisplay
+class EntryColumnDisplay
   COLUMN_PADDING = 10
 
   def initialize(files, column: 3)

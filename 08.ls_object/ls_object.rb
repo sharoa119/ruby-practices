@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative 'path_collection'
-require_relative 'path_display'
+require_relative 'entry_column_display'
 require_relative 'file_detail_display'
 
 require 'optparse'
@@ -19,5 +19,5 @@ end
 path_collection = PathCollection.new(dotmatch: params[:a], reverse: params[:r])
 paths = path_collection.paths
 
-display = params[:l] ? FileDetailDisplay.new(paths) : PathDisplay.new(paths)
+display = params[:l] ? FileDetailDisplay.new(paths) : EntryColumnDisplay.new(paths)
 display.show
