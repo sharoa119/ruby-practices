@@ -30,12 +30,10 @@ class LongFormatFileList
   private
 
   def calculate_max_column_widths(long_formats)
-    {
-      nlink: long_formats.map { |format| format[:nlink].size }.max,
-      username: long_formats.map { |format| format[:username].size }.max,
-      groupname: long_formats.map { |format| format[:groupname].size }.max,
-      bitesize: long_formats.map { |format| format[:bitesize].size }.max,
-      mtime: long_formats.map { |format| format[:mtime].size }.max
-    }
+    keys = %i[nlink username groupname bitesize mtime]
+
+    keys.each_with_object({}) do |key, result|
+      result[key] = long_formats.map { |format| format[key].size }.max
+    end
   end
 end
