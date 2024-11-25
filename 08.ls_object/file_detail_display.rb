@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'detailed_file'
+
 class FileDetailDisplay
   def initialize(files)
     @files = files
