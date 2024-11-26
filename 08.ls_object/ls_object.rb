@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'entry_column_display'
-require_relative 'long_format_file_list'
+require_relative 'column_display'
+require_relative 'long_format_display'
 
 require 'optparse'
 
@@ -22,5 +22,5 @@ paths = if params[:a]
         end
 paths.reverse! if params[:r]
 
-display = params[:l] ? LongFormatFileList.new(paths) : EntryColumnDisplay.new(paths)
+display = params[:l] ? LongFormatDisplay.new(paths) : ColumnDisplay.new(paths)
 display.show

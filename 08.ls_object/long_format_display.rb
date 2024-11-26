@@ -2,7 +2,7 @@
 
 require_relative 'detailed_file'
 
-class LongFormatFileList
+class LongFormatDisplay
   def initialize(files)
     @files = files
   end
